@@ -1,6 +1,6 @@
 import { useState, type SubmitEvent, useEffect } from "react";
 import styled from "styled-components";
-import { FaPlus } from "react-icons/fa";
+import { FaCheck, FaPlus, FaTrash } from "react-icons/fa";
 
 type TodoType = {
     id: number;
@@ -62,6 +62,53 @@ const AddButton = styled.button`
     }
 `;
 
+const TodoList = styled.ul`
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+`;
+
+const TodoItem = styled.li<{ $isCompleted: boolean }>`
+    background-color: ${props => props.theme.colors.background.paper};
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: 1px solid ${props => props.theme.colors.divider};
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.5s;
+
+    :hover {
+        border-color: ${props => props.theme.colors.primary};
+    }
+
+    span {
+        flex: 1;
+        font-size: 16px;
+        color: ${props =>
+            props.$isCompleted
+                ? props.theme.colors.text.disabled
+                : props.theme.colors.text.default};
+        text-decoration: ${props => (props.$isCompleted ? "line-through" : "none")};
+    }
+`;
+
+const IconButton = styled.button<{ $colorType: "success" | "error" }>`
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    opacity: 0.6;
+    transition: all 0.5s;
+    color: ${props => props.theme.colors[props.$colorType]};
+
+    &:hover {
+        opacity: 1;
+    }
+`;
 function TodoPage() {
     const [inputValue, setInputValue] = useState(""); // 인푹에 입력된 갑 관리
 
@@ -70,7 +117,7 @@ function TodoPage() {
     // localStorage 에서 "todos" 라는키를 가진 값을 불러오고
     // 그 값이 있으묜 자바스크립트의 객체, 배열 형태로 반환하고 그 값이 없으면 빈 배열을 반환함.
     const [todos, setTodos] = useState<TodoType[]>(() => {
-        const storedTodos = localStorage.getItem("todos")
+        const storedTodos = localStorage.getItem("todos");
         return storedTodos ? JSON.parse(storedTodos) : [];
     }); // 할 일 목록을 관리
 
@@ -92,6 +139,18 @@ function TodoPage() {
         localStorage.setItem("todos", JSON.stringify(todos));
     }, [todos]);
 
+    const toggleTodo = (id: number) => {
+        setTodos(
+            todos.map(value => {
+                return value.id === id ? { ...value, isCompleted: !value.isCompleted } : value;
+            }),
+        );
+    };
+
+    const deleteTodo = (id: number) => {
+        setTodos(todos.filter(value => value.id !== id))
+    };
+
     return (
         <Container>
             <Title>Todo List</Title>
@@ -105,10 +164,19 @@ function TodoPage() {
                     <FaPlus />
                 </AddButton>
             </InputSelection>
-
-            {todos.map((value, index) => (
-                <li key={index}>{value.text}</li>
-            ))}
+            <TodoList>
+                {todos.map((value, index) => (
+                    <TodoItem key={index} $isCompleted={value.isCompleted}>
+                        <IconButton $colorType={"success"} onClick={() => toggleTodo(value.id)}>
+                            <FaCheck />
+                        </IconButton>
+                        <span>{value.text}</span>
+                        <IconButton $colorType={"error"} onClick={() => deleteTodo(value.id)}>
+                            <FaTrash />
+                        </IconButton>
+                    </TodoItem>
+                ))}
+            </TodoList>
         </Container>
     );
 }
