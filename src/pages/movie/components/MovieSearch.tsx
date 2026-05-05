@@ -9,7 +9,10 @@ export type MovieType = {
     Year: string;
     Type: string;
     Director: string;
-
+    Genre: string;
+    Plot: string;
+    Writer: string;
+    Actors: string;
 };
 
 const DivGap = styled.div`
@@ -21,12 +24,18 @@ const DivGap = styled.div`
 const Card = styled.div`
     display: flex;
     gap: 20px;
-    width: calc((100% - 120px) / 6);
+    width: calc((100% - 120px) / 5);
     background-color: ${props => props.theme.colors.background.paper};
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     align-items: center;
     justify-content: center;
     border-radius: 10px;
+    border: transparent;
+    transition: all 0.5s;
+
+    &:hover {
+        transform: translateY(-5px);
+    }
 `;
 
 const MovieWrap = styled.div`
@@ -37,14 +46,24 @@ const MovieWrap = styled.div`
 
 const Img = styled.img`
     margin-top: 20px;
-    height: 350px;
-    border-radius: 5%;
+    height: 30dvh;
+    border-radius: 10px;
+    width: 80%;
 `;
+
 
 const TextTitle = styled.div`
     text-align: center;
     margin: 20px;
     font-weight: 800;
+`;
+
+const LinkA = styled(Link)`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
 `;
 
 type Res = { Search: MovieType[] };
@@ -71,12 +90,10 @@ function MovieSearch() {
             <MovieWrap>
                 {list.map((value, index) => (
                     <Card key={index}>
-                        <Link to={`/movie/detail/${value.imdbID}`}>
-                            <div>
-                                <Img src={value.Poster} alt={value.Title} />
-                                <TextTitle>{value.Title}</TextTitle>
-                            </div>
-                        </Link>
+                        <LinkA to={`/movie/detail/${value.imdbID}`}>
+                            <Img src={value.Poster} alt={value.Title} />
+                            <TextTitle>{value.Title}</TextTitle>
+                        </LinkA>
                     </Card>
                 ))}
             </MovieWrap>
