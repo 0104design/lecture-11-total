@@ -46,9 +46,19 @@ const Card = styled.div`
 const Box = styled.div`
     display: flex;
     flex-direction: column;
+    align-items: center;
 `;
 
-function RocketDetail({ list, loading, setSelected }: Props) {
+const Name   = styled.div`
+    font-size: 25px;
+    font-weight: 700;
+`;
+
+const Country = styled.div`
+    color: ${props => props.theme.colors.text.default};
+`
+
+function RocketHome({ list, loading, setSelected }: Props) {
     return (
         <Wrap>
             {loading ? (
@@ -63,8 +73,8 @@ function RocketDetail({ list, loading, setSelected }: Props) {
                                     setSelected(list);
                                 }}>
                                 <Box>
-                                    <div>{list.name}</div>
-                                    <div>{list.country}</div>
+                                    <Name>{list.name}</Name>
+                                    <Country>{list.country}</Country>
                                 </Box>
                             </Card>
                         );
@@ -75,4 +85,4 @@ function RocketDetail({ list, loading, setSelected }: Props) {
     );
 }
 
-export default RocketDetail;
+export default RocketHome;

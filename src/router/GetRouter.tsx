@@ -42,8 +42,13 @@ const GetRouter = createBrowserRouter([
             {
                 path: "book",
                 children: [
-                    { index: true, element: <BookHome /> },
-                    { path: "search/?keyword", element: <Search /> },
+                    {
+                        index: true,
+                        element: <BookHome />,
+                    },
+                    {
+                        path: "search", element: <Search />
+                    }
                 ],
             },
         ],
